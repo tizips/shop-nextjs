@@ -1,0 +1,47 @@
+@import "styles/config";
+
+.main {
+  width: 100%;
+  max-width: var(--width-application);
+  margin: 0 auto;
+  padding: 70px 0;
+
+  .head {
+    display: flex;
+
+    @media (max-width: $mobile) {
+      display: block;
+      padding: 0 15px;
+    }
+
+    .breadcrumb {
+      display: flex;
+      flex: 1 auto;
+      align-content: center;
+
+      @media (max-width: $mobile) {
+        margin-bottom: 20px;
+        justify-content: center;
+      }
+    }
+  }
+
+  .container {
+    padding: 20px 0 50px;
+
+    .title {
+      color: var(--color);
+      font-size: 26px;
+      font-weight: 400;
+      border-bottom: $borderLine;
+      padding: 10px 0 10px;
+    }
+
+    .inner {
+      color: $textColor;
+      margin-top: 20px;
+      font-size: 14px;
+      //font-weight: 300;
+    }
+  }
+}

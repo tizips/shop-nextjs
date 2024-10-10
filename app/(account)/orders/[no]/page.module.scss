@@ -1,0 +1,107 @@
+@import "styles/config";
+
+.main {
+
+  width: 100%;
+  max-width: var(--width-application);
+  margin: 0 auto;
+  padding: 70px 0;
+
+  @media (max-width: $mobile) {
+    padding: 60px 15px;
+  }
+
+  .head {
+    padding-bottom: 10px;
+  }
+
+  .container {
+
+    .information {
+
+      .left {
+        border-right: $borderLine;
+
+        @media (max-width: $mobile) {
+          border-right: none;
+        }
+
+        ul {
+          width: 100%;
+          padding: 15px;
+          border-bottom: $borderLine;
+
+          &:last-child {
+            border-bottom: 0;
+
+            @media (max-width: $mobile) {
+              border-bottom: $borderLine;
+            }
+          }
+
+          li {
+            display: flex;
+            padding: 3px 0;
+
+            .label {
+              margin-right: 10px;
+            }
+
+            .value {
+              flex: 1 auto;
+              text-align: right;
+
+              img {
+                height: 36px;
+              }
+            }
+          }
+        }
+
+      }
+
+      .right {
+
+        .status {
+          border-bottom: $borderLine;
+
+          .inner {
+            padding: 80px 30px;
+
+            :global {
+
+              .ant-steps-item-description {
+                margin-top: 5px;
+              }
+            }
+          }
+
+          .operate {
+            padding-bottom: 15px;
+
+            ul {
+              list-style: none;
+              display: flex;
+              justify-content: flex-end;
+              padding: 0 10px;
+
+              li {
+                padding: 0 5px;
+              }
+            }
+          }
+        }
+
+        .tracking {
+          padding: 40px 15px 0;
+        }
+      }
+    }
+
+    .products {
+      margin-top: 30px;
+      overflow: hidden;
+    }
+  }
+
+}

@@ -1,0 +1,127 @@
+@import "styles/config";
+
+.main {
+  width: 100%;
+  max-width: var(--width-application);
+  margin: 0 auto;
+  padding: 70px 0;
+
+  @media (max-width: $mobile) {
+    padding: 60px 15px;
+  }
+
+  .head {
+    padding-bottom: 70px;
+    border-bottom: $borderLine;
+    margin-bottom: 20px;
+
+    h1 {
+      color: $primaryColor;
+      font-size: 30px;
+      font-weight: 400;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+  }
+
+  form {
+    width: 100%;
+  }
+
+  .container {
+    display: flex;
+    margin-bottom: 45px;
+
+    @media (max-width: $mobile) {
+      display: block;
+    }
+
+    .billing {
+      flex: 1 auto;
+      margin-right: 5%;
+
+      @media (max-width: $mobile) {
+        margin-right: 0;
+      }
+
+      h3 {
+        color: $textColor;
+        font-size: 24px;
+        font-weight: 300;
+        line-height: 1.4;
+        margin: 20px 0 10px;
+      }
+
+      .note {
+
+      }
+    }
+
+    .information {
+      width: 40%;
+
+      @media (max-width: $mobile) {
+        width: 100%;
+      }
+
+      h3 {
+        color: $textColor;
+        font-size: 24px;
+        font-weight: 300;
+        line-height: 1.4;
+        margin: 20px 0 20px;
+      }
+
+      .order {
+        margin-bottom: 20px;
+
+        span {
+          font-weight: bold;
+          font-size: 12px;
+        }
+
+        .product {
+          font-weight: 300;
+          padding-left: 10px;
+        }
+      }
+
+      .coupon {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: $borderLine;
+
+        .inner {
+          margin-top: 20px;
+
+          p {
+            color: $textColor;
+            margin-bottom: 20px;
+          }
+        }
+      }
+
+      .payment {
+        text-align: center;
+        border-bottom: $borderLine;
+        margin-bottom: 20px;
+
+        ul {
+          list-style: none;
+
+          li {
+
+            img {
+              height: 80px;
+            }
+          }
+        }
+      }
+
+      .btn {
+
+      }
+    }
+  }
+
+}

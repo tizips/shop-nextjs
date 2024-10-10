@@ -1,0 +1,46 @@
+.main {
+  width: 100%;
+  max-width: var(--width-application);
+  margin: 0 auto;
+  padding: 130px 0;
+
+  .head {
+    border-bottom: 1px dotted #c2c2c2;
+    margin-bottom: 15px;
+
+    h2 {
+      color: #111;
+      font-size: 22px;
+      line-height: 1.4;
+      font-weight: 400;
+      letter-spacing: 1px;
+      margin-bottom: 15px;
+    }
+
+    .meta {
+      color: #111;
+      font-size: 12px;
+      margin-bottom: 15px;
+    }
+  }
+
+  .content {
+
+    .thumb {
+      text-align: center;
+      margin-bottom: 30px;
+
+      img {
+        width: 80%;
+      }
+    }
+
+    .information {
+      color: #111;
+      font-size: 1.25em;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.8;
+    }
+  }
+}

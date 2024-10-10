@@ -1,0 +1,51 @@
+@import "styles/config";
+
+.main {
+    display: flex;
+    margin-top: 50px;
+    justify-content: center;
+
+    ul {
+        display: flex;
+        list-style: none;
+
+        li {
+            height: 32px;
+            line-height: 32px;
+
+            a {
+                color: rgba(0, 0, 0, 0.88);
+                text-align: center;
+                width: 32px;
+                height: 32px;
+                line-height: 32px;
+                border-radius: 6px;
+                display: block;
+                font-size: 14px;
+                margin: 0 5px;
+            }
+
+            &.ellipsis {
+                margin: 0 10px;
+            }
+
+            &.disabled {
+                cursor: not-allowed;
+                pointer-events: none;
+
+                a {
+                    color: rgba(0, 0, 0, 0.04);
+                }
+            }
+
+            &.active {
+                pointer-events: none;
+
+                a {
+                    border: 1px solid $primaryColor;
+                    color: $primaryColor;
+                }
+            }
+        }
+    }
+}

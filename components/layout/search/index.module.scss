@@ -1,0 +1,21 @@
+@import "styles/config";
+
+.main {
+
+  .container {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    padding: 3px;
+    background-color: var(--background);
+
+    @media (max-width: $mobile) {
+      width: 100vw;
+    }
+
+    &.active {
+      display: block;
+    }
+  }
+}

@@ -1,0 +1,76 @@
+@import "styles/config";
+
+.main {
+
+  .price {
+    color: #111;
+    font-size: 32px;
+    margin-bottom: 20px;
+
+    .del {
+      color: $textColor;
+      font-size: 12px;
+      margin-left: 10px;
+      text-decoration: line-through;
+    }
+  }
+
+  .attributes {
+    margin-bottom: 20px;
+
+    .group {
+      margin-bottom: 10px;
+
+      h4 {
+        font-size: 12px;
+        font-weight: 300;
+        margin-bottom: 8px;
+      }
+
+      .attr {
+
+      }
+    }
+  }
+
+  .quantity {
+    margin-bottom: 20px;
+
+    .input {
+      width: 60%;
+
+      @media (max-width: $mobile) {
+        width: 100%;
+      }
+    }
+  }
+
+  .operate {
+    width: 60%;
+    display: flex;
+    margin-bottom: 20px;
+
+    @media (max-width: $mobile) {
+      display: block;
+      width: 100%;
+    }
+
+    .cart {
+      flex: 1 auto;
+
+      @media (max-width: $mobile) {
+        width: 100%;
+      }
+    }
+
+    .wish {
+      margin-left: 15px;
+
+      @media (max-width: $mobile) {
+        margin-top: 20px;
+        width: 100%;
+        margin-left: 0;
+      }
+    }
+  }
+}

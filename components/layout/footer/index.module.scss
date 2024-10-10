@@ -1,0 +1,64 @@
+@import "styles/config";
+
+.main {
+  width: 100%;
+  background-color: var(--background);
+
+  .container {
+    width: 100%;
+    max-width: var(--width-application);
+    margin: 0 auto;
+    padding: 70px 0 20px;
+    text-align: center;
+    color: #fff;
+
+    ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-flow: wrap;
+
+      @media (max-width: $mobile) {
+        display: block;
+        line-height: 1.4;
+      }
+
+      li {
+        padding: 0 15px;
+
+        a {
+          font-size: 12px;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    p {
+      margin-bottom: 10px;
+      font-size: 13px;
+
+      span {
+        color: #aaa;
+        margin-left: 10px;
+      }
+    }
+
+    ol {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+
+      li {
+
+        img {
+          width: auto;
+          height: 30px;
+        }
+      }
+    }
+  }
+}

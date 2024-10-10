@@ -1,0 +1,19 @@
+@import "styles/config";
+
+.main {
+
+  ul {
+    list-style: none;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+
+    li {
+      text-align: center;
+
+      a {
+        color: $textColor;
+      }
+    }
+  }
+}

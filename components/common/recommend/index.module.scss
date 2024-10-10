@@ -1,0 +1,79 @@
+@import "styles/config";
+
+.main {
+
+  .swiper {
+    padding-bottom: 30px;
+
+    .paginate {
+      bottom: 0;
+
+      .bullet {
+        width: 6px;
+        height: 6px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background-color: #fff;
+        display: inline-block;
+        margin: 0 3px;
+      }
+
+      .active {
+        background-color: var(--color);
+      }
+    }
+
+    .item {
+      user-select: none;
+
+      a {
+        display: block;
+        transition: all .3s ease-in-out;
+        padding-bottom: 10px;
+
+        &:hover {
+          box-shadow: $boxShadow;
+
+          h3 {
+            color: var(--color-link-active);
+          }
+        }
+      }
+
+      img {
+        width: 100%;
+        height: auto;
+      }
+
+      h3 {
+        text-align: center;
+        font-size: 14px;
+        font-weight: 400;
+        //letter-spacing: 2px;
+        color: var(--color-link);
+        margin: 15px 0 5px;
+        padding: 0 5px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .amount {
+        display: flex;
+        justify-content: center;
+
+        span {
+          display: inline-block;
+          color: var(--color-link-active);
+          text-align: center;
+          font-size: 12px;
+          padding: 0 5px;
+
+          &.del {
+            text-decoration: line-through;
+          }
+        }
+      }
+    }
+  }
+}
