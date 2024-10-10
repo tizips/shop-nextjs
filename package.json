@@ -15,7 +15,7 @@
     "axios": "^1.7.7",
     "dayjs": "^1.11.13",
     "js-md5": "^0.8.3",
-    "next": "^14.2.15",
+    "next": "14.2.15",
     "next-auth": "^4.24.7",
     "nextjs-ssr-pagination": "^1.0.5",
     "nextjs-toploader": "^3.6.15",

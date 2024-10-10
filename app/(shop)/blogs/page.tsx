@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import styles from './page.module.scss';
 
 import Paginate from "@/components/common/paginate";
-import {doPage} from "@/app/actions/page";
+import {doPage} from "@/app/actions/pages";
 import {doSetting} from "@/app/actions/setting";
 
 export async function generateMetadata(props: any, parent: ResolvingMetadata): Promise<Metadata> {

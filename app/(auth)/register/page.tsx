@@ -1,6 +1,6 @@
 'use client'
 
-import {useState} from "react";
+import {Suspense, useState} from "react";
 import {useSearchParams} from "next/navigation";
 import {notification} from "antd";
 import {signIn} from "next-auth/react";
@@ -10,7 +10,7 @@ import styles from './page.module.scss';
 
 import Register from "@/components/auth/register";
 
-export default function () {
+function Component() {
 
     const search = useSearchParams()
     const router = useRouter()
@@ -84,5 +84,13 @@ export default function () {
                 <Register onFinish={onFinish} loading={loading}/>
             </div>
         </div>
+    )
+}
+
+export default function () {
+    return (
+        <Suspense>
+            <Component/>
+        </Suspense>
     )
 }

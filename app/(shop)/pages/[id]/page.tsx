@@ -1,11 +1,11 @@
+import {Metadata, ResolvingMetadata} from "next";
 import {Breadcrumb} from "antd";
 import Link from "next/link";
 import {notFound} from "next/navigation";
-import {doPage} from "@/app/actions/page";
+import {doSEO} from "@/app/actions/seo";
+import {doPage} from "@/app/actions/pages";
 
 import styles from './page.module.scss';
-import {Metadata, ResolvingMetadata} from "next";
-import {doSEO} from "@/app/actions/seo";
 
 export async function generateMetadata(props: {
     params: { id: string }

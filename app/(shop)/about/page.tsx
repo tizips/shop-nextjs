@@ -3,7 +3,7 @@ import {Col, Row} from "antd";
 import {LikeOutlined, ShoppingCartOutlined, TruckOutlined} from "@ant-design/icons";
 import {doSetting} from "@/app/actions/setting";
 import {doSEO} from "@/app/actions/seo";
-import {doPage} from "@/app/actions/page";
+import {doPage} from "@/app/actions/pages";
 
 import styles from './page.module.scss';
 

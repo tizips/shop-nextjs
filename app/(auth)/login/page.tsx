@@ -1,6 +1,6 @@
 'use client'
 
-import {useState} from "react";
+import {Suspense, useState} from "react";
 import {useSearchParams} from "next/navigation";
 import {notification} from "antd";
 import {signIn} from "next-auth/react";
@@ -10,7 +10,7 @@ import styles from './page.module.scss';
 
 import Login from '@/components/auth/login';
 
-export default function () {
+function Component() {
 
     const search = useSearchParams()
     const router = useRouter()
@@ -71,5 +71,14 @@ export default function () {
                 <Login onFinish={onFinish} loading={loading}/>
             </div>
         </div>
+    )
+}
+
+export default function () {
+
+    return (
+        <Suspense>
+            <Component/>
+        </Suspense>
     )
 }
