@@ -6,7 +6,7 @@ export async function doSetting() {
 
     let data: Record<string, string> = {}
 
-    let search = new URLSearchParams('module=shop')
+    let search = new URLSearchParams({module: 'shop'})
 
     const values = doSign(search.toString())
 

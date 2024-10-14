@@ -17,7 +17,21 @@
 
   .container {
 
+    .products {
+      overflow: hidden;
+
+      h3 {
+        font-size: 14px;
+        font-weight: normal;
+
+        &.service {
+          padding-top: 26px;
+        }
+      }
+    }
+
     .information {
+      margin-top: 30px;
 
       .left {
         border-right: $borderLine;
@@ -77,7 +91,7 @@
           }
 
           .operate {
-            padding-bottom: 15px;
+            padding: 15px;
 
             ul {
               list-style: none;
@@ -94,32 +108,6 @@
 
         .tracking {
           padding: 40px 15px 0;
-        }
-      }
-    }
-
-    .products {
-      margin-top: 30px;
-      overflow: hidden;
-
-      h3 {
-        font-size: 14px;
-        font-weight: normal;
-
-        &.service {
-          padding-top: 26px;
-        }
-      }
-
-      .refunded, .returned {
-        border-top: 1px solid rgba(229, 229, 229, 0.6);
-        margin-top: 5px;
-        padding-top: 5px;
-        font-size: 12px;
-
-        span {
-          color: red;
-          font-size: 14px;
         }
       }
     }

@@ -6,7 +6,7 @@ import {Breadcrumb, Image, notification, Spin, Tag} from "antd";
 import {EyeOutlined} from "@ant-design/icons";
 import {useSession} from "next-auth/react";
 import Constants from "@/util/Constants";
-import {Orders} from "@/service/object";
+import {Services} from "@/service/object";
 
 import styles from './page.module.scss';
 
@@ -17,9 +17,9 @@ export default function ({searchParams}: { searchParams: URLSearchParams }) {
     const {data: session, status} = useSession()
 
     const [load, setLoad] = useState(false)
-    const [orders, setOrders] = useState<API.Paginate<API.Orders>>({page: 1, size: 12, total: 0, data: []});
+    const [services, setServices] = useState<API.Paginate<API.Services>>({page: 1, size: 12, total: 0, data: []});
 
-    const toOrders = async () => {
+    const toServices = async () => {
 
         setLoad(true)
 
@@ -29,7 +29,7 @@ export default function ({searchParams}: { searchParams: URLSearchParams }) {
 
             let query = search.toString()
 
-            const response = await fetch(`/api/orders${query ? '?' + query : ''}`, {
+            const response = await fetch(`/api/services${query ? '?' + query : ''}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -39,13 +39,13 @@ export default function ({searchParams}: { searchParams: URLSearchParams }) {
 
             if (response) {
 
-                const resp: API.Response<API.Paginate<API.Orders>> = await response.json();
+                const resp: API.Response<API.Paginate<API.Services>> = await response.json();
 
                 if (resp.code != Constants.Success) {
                     throw new Error(resp.message);
                 }
 
-                setOrders(resp.data)
+                setServices(resp.data)
             }
         } catch (e: any) {
             notification.error({message: e.message});
@@ -56,7 +56,7 @@ export default function ({searchParams}: { searchParams: URLSearchParams }) {
 
     useEffect(() => {
         if (status == 'authenticated') {
-            toOrders()
+            toServices()
         }
     }, [status, searchParams]);
 
@@ -65,7 +65,7 @@ export default function ({searchParams}: { searchParams: URLSearchParams }) {
             <div className={styles.head}>
                 <Breadcrumb items={[
                     {title: <Link href='/'>Home</Link>},
-                    {title: 'Orders'},
+                    {title: 'Services'},
                 ]}/>
             </div>
             <div className={styles.container}>
@@ -88,23 +88,34 @@ export default function ({searchParams}: { searchParams: URLSearchParams }) {
                                     <Spin/>
                                 </td>
                             </tr> :
-                            orders.data.map(item => (
+                            services.data.map(item => (
                                 <React.Fragment key={item.id}>
                                     <tr className={styles.header}>
                                         <td colSpan={2}>
                                             <div className={styles.no}>
                                                 <span>No: </span>
-                                                <Link href={`/orders/${item.id}`}>
+                                                <Link href={`/services/${item.id}`}>
                                                     <span>{item.id}</span><EyeOutlined/>
                                                 </Link>
                                             </div>
                                         </td>
-                                        <td colSpan={3}>
+                                        <td colSpan={2}>
+                                            <div className={styles.type}>
+                                                {
+                                                    Services[item.type] ?
+                                                        <Tag
+                                                            color={Services[item.type].color}>{Services[item.type].label}</Tag> :
+                                                        item.type
+                                                }
+                                            </div>
+                                        </td>
+                                        <td>
                                             <div className={styles.ext}>
                                                 {
-                                                    Orders[item.status] &&
-                                                    <Tag
-                                                        color={Orders[item.status].color}>{Orders[item.status].label}</Tag>
+                                                    Services[item.status] ?
+                                                        <Tag
+                                                            color={Services[item.status].color}>{Services[item.status].label}</Tag> :
+                                                        item.status
                                                 }
                                             </div>
                                         </td>
@@ -125,16 +136,28 @@ export default function ({searchParams}: { searchParams: URLSearchParams }) {
                                                     <span>{value.quantity}</span>
                                                 </td>
                                                 <td>
-                                                    <span>${(value.price * value.quantity / 100).toFixed(2)}</span>
+                                                    <span>${(value.refund / 100).toFixed(2)}</span>
                                                 </td>
                                             </tr>
                                         ))
                                     }
+                                    <tr className={styles.summary}>
+                                        <td>Reason:</td>
+                                        <td colSpan={4}>
+                                            {item.reason}
+                                        </td>
+                                    </tr>
+                                    <tr className={styles.summary}>
+                                        <td>Creation Time:</td>
+                                        <td colSpan={4}>
+                                            {item.created_at}
+                                        </td>
+                                    </tr>
                                     <tr className={styles.total}>
                                         <td colSpan={5}>
-                                            {/*<p>Subtotal: $12.00</p>*/}
-                                            {/*<p>Coupon: -$12.00</p>*/}
-                                            <p>Total: ${(item.prices / 100).toFixed(2)}</p>
+                                            <p>Subtotal: ${(item.subtotal / 100).toFixed(2)}</p>
+                                            <p>Shipping Fee: ${(item.shipping / 100).toFixed(2)}</p>
+                                            <p>Total: ${(item.refund / 100).toFixed(2)}</p>
                                         </td>
                                     </tr>
                                 </React.Fragment>
@@ -143,7 +166,7 @@ export default function ({searchParams}: { searchParams: URLSearchParams }) {
                     </tbody>
                 </table>
                 <div className={styles.paginate}>
-                    <Paginate size={orders.size} total={orders.total} current={orders.page} uri='/orders'
+                    <Paginate size={services.size} total={services.total} current={services.page} uri='/services'
                               query={(new URLSearchParams(searchParams))}/>
                 </div>
             </div>

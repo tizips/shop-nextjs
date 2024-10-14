@@ -1,4 +1,4 @@
-declare namespace APIOrder {
+declare namespace APIService {
 
     type Status = {
         icon: any;
@@ -17,9 +17,8 @@ declare namespace APIOrder {
     }
 
     type Loading = {
-        service?: boolean;
-        received?: boolean;
-        payment?: boolean;
+        cancel?: boolean;
+        receipt?: boolean;
     }
 
 }

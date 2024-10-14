@@ -2,18 +2,20 @@ import {Axios, doSign} from "@/service/request";
 import {AxiosResponse} from "axios";
 import {NextResponse} from "next/server";
 
-export async function GET(req: Request, route: { params: { id: string } }) {
+export async function GET(req: Request) {
 
-    const values = doSign()
+    const url = new URL(req.url);
+
+    const values = doSign(url.searchParams.toString())
 
     try {
 
-        const response = await Axios().request<any, AxiosResponse<API.Response<API.Order>>>({
+        const response = await Axios().request<any, AxiosResponse<API.Response<API.Services[]>>>({
             method: 'GET',
             headers: {
                 Authorization: req.headers.get('Authorization'),
             },
-            url: `/shop/orders/${route.params.id}`,
+            url: '/shop/services',
             params: new URLSearchParams(values),
         })
 

@@ -1,18 +1,19 @@
 'use client'
 
 import React, {useEffect, useState} from "react";
-import {router} from "next/client";
 import {Alert, Button, Col, ConfigProvider, Form, Input, notification, Row, Select, Space, Table, Tag} from "antd";
 import {LoadingOutlined} from "@ant-design/icons";
+import {useRouter} from "nextjs-toploader/app";
 import {useSession} from "next-auth/react";
 import Constants from "@/util/Constants";
 
 import styles from './page.module.scss';
-import {redirect} from "next/navigation";
 
 export default function () {
 
     const {data: session, status} = useSession()
+
+    const router = useRouter()
 
     const [form] = Form.useForm<APICheckout.Form>()
 
@@ -52,8 +53,7 @@ export default function () {
 
                 setCarts(resp.data)
             }
-        } catch (e) {
-            // @ts-ignore
+        } catch (e: any) {
             notification.error({message: e.message});
         } finally {
             setLoading(false)
@@ -86,7 +86,7 @@ export default function () {
         }
     }
 
-    const toPaypal = async (id: string) => {
+    const toPaypal = async (id: string, order: string) => {
 
         try {
             const response = await fetch('/api/payment/paypal', {
@@ -103,9 +103,11 @@ export default function () {
                 const resp: API.Response<API.Paypal> = await response.json();
 
                 if (resp.code != Constants.Success) {
-                    throw new Error(resp.message);
+                    notification.error({message: resp.message});
+                    router.push(`/orders/${order}`)
+                    return
                 }
-                console.info(resp.data)
+
                 setPayment(resp.data.link)
 
                 notification.success({message: 'Payment initiated successfully, waiting for system redirect.'})
@@ -140,7 +142,7 @@ export default function () {
                 notification.success({message: 'Order placed successfully, waiting for the system to initiate payment.'})
 
                 if (resp.data.channel == 'paypal') {
-                    await toPaypal(resp.data.pay_id)
+                    await toPaypal(resp.data.pay_id, resp.data.id)
                 }
             }
         } catch (e: any) {

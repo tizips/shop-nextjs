@@ -3,17 +3,18 @@
 import React, {useEffect, useState} from "react";
 import Link from "next/link";
 import {
+    Badge,
     Breadcrumb,
     Button,
     Card,
     Col,
     ConfigProvider,
-    Image,
+    Image, Modal,
     notification,
     Row,
     Spin,
     Steps,
-    Table,
+    Table, Tag,
     Timeline
 } from "antd";
 import {
@@ -24,9 +25,14 @@ import {
     TruckOutlined
 } from "@ant-design/icons";
 import {useSession} from "next-auth/react";
+import {useRouter} from "nextjs-toploader/app";
 import Constants from "@/util/Constants";
+import {Orders} from "@/service/object";
 
 import styles from './page.module.scss';
+
+import Service from '@/components/order/service'
+import Feedback from '@/components/order/feedback'
 
 const Status: APIOrder.Status[] = [
     {
@@ -55,13 +61,56 @@ export default function ({params}: { params: { no: string } }) {
 
     const {data: session, status} = useSession()
 
-    const [statuses, setStatuses] = React.useState<APIOrder.Status[]>(Status);
+    const [modal, contextHolder] = Modal.useModal();
+
+    const router = useRouter()
+
+    const [statuses, setStatuses] = useState<APIOrder.Status[]>(Status);
     const [order, setOrder] = useState<API.Order>()
-    const [loading, setLoading] = React.useState(true);
+    const [loading, setLoading] = useState<APIOrder.Loading>({})
+    const [payment, setPayment] = useState<string>()
+    const [load, setLoad] = useState(true);
+    const [service, setService] = useState(false)
+    const [services, setServices] = useState(false)
+    const [feedback, setFeedback] = useState(false)
+
+    const toPaypal = async (id: string) => {
+
+        setLoading({...loading, payment: true})
+
+        try {
+            const response = await fetch('/api/payment/paypal', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': session?.jwt
+                },
+                body: JSON.stringify({id}),
+            });
+
+            if (response) {
+
+                const resp: API.Response<API.Paypal> = await response.json();
+
+                if (resp.code != Constants.Success) {
+                    notification.error({message: resp.message});
+                    return
+                }
+
+                setPayment(resp.data.link)
+
+                notification.success({message: 'Payment initiated successfully, waiting for system redirect.'})
+            }
+        } catch (e: any) {
+            notification.error({message: e.message});
+        } finally {
+            setLoading({...loading, payment: false})
+        }
+    }
 
     const toOrder = async () => {
 
-        setLoading(true)
+        setLoad(true)
 
         try {
 
@@ -78,7 +127,15 @@ export default function ({params}: { params: { no: string } }) {
                 const resp: API.Response<API.Order> = await response.json();
 
                 if (resp.code != Constants.Success) {
-                    // redirect(403, '/404')
+                    router.push('/404')
+                    return
+                }
+
+                for (const item of resp.data.details) {
+                    if (item.quantity > (item.returned + item.services)) {
+                        setServices(true)
+                        break
+                    }
                 }
 
                 setOrder(resp.data)
@@ -86,8 +143,69 @@ export default function ({params}: { params: { no: string } }) {
         } catch (e: any) {
             notification.error({message: e.message});
         } finally {
-            setLoading(false)
+            setLoad(false)
         }
+    }
+
+    const toReceived = async () => {
+
+        setLoading({...loading, received: true})
+
+        try {
+            const response = await fetch('/api/order/received', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': session?.jwt
+                },
+                body: JSON.stringify({id: params.no}),
+            });
+
+            if (response) {
+
+                const resp: API.Response<any> = await response.json();
+
+                if (resp.code != Constants.Success) {
+                    throw new Error(resp.message);
+                }
+
+                notification.success({message: 'The order has been completed.'})
+
+                toOrder()
+            }
+        } catch (e: any) {
+            notification.error({message: e.message});
+        } finally {
+            setLoading({...loading, received: false})
+        }
+    }
+
+    const onReceived = () => {
+        modal.confirm({
+            centered: true,
+            icon: <FileDoneOutlined/>,
+            title: 'Confirm Receipt',
+            content: 'Are you sure you have received the product? ',
+            onOk: toReceived,
+        })
+    }
+
+    const onPayment = () => {
+
+        if (order?.payment && !order.payment.no) {
+
+            if (order.payment.channel == 'paypal') {
+                toPaypal(order.payment.id)
+            }
+        }
+    }
+
+    const onService = () => {
+        setService(true)
+    }
+
+    const onFeedback = () => {
+        setFeedback(true)
     }
 
     useEffect(() => {
@@ -111,12 +229,13 @@ export default function ({params}: { params: { no: string } }) {
                     data[2].status = 'finish'
 
                     data[3].status = 'process'
-                } else if (item.action == 'receipt') {
+                } else if (item.action == 'received') {
                     data[3].description = item.created_at
                     data[3].status = 'finish'
 
                     data[4].status = 'process'
                 } else if (item.action == 'completed') {
+
                     data[4].description = item.created_at
                     data[4].status = 'finish'
                 }
@@ -131,6 +250,12 @@ export default function ({params}: { params: { no: string } }) {
             toOrder()
         }
     }, [status]);
+
+    useEffect(() => {
+        if (payment) {
+            window.location.href = payment
+        }
+    }, [payment]);
 
     return (
         <ConfigProvider
@@ -150,6 +275,7 @@ export default function ({params}: { params: { no: string } }) {
                 }
             }}
         >
+            {contextHolder}
             <div className={styles.main}>
                 <div className={styles.head}>
                     <Breadcrumb items={[
@@ -158,12 +284,33 @@ export default function ({params}: { params: { no: string } }) {
                         {title: params.no},
                     ]}/>
                 </div>
-                <Spin spinning={loading}>
+                <Spin spinning={load}>
                     <div className={styles.container}>
 
                         <Card className={styles.information}>
                             <Row>
                                 <Col span={24} md={8} className={styles.left}>
+                                    <ul>
+                                        <li>
+                                            <p className={styles.label}>No:</p>
+                                            <p className={styles.value}>{order?.id}</p>
+                                        </li>
+                                        <li>
+                                            <p className={styles.label}>Order Time:</p>
+                                            <p className={styles.value}>{order?.create_at}</p>
+                                        </li>
+                                        <li>
+                                            <p className={styles.label}>Status:</p>
+                                            <p className={styles.value}>
+                                                {
+                                                    order?.status && Orders[order.status] ?
+                                                        <Tag
+                                                            color={Orders[order.status].color}>{Orders[order.status].label}</Tag> :
+                                                        order?.status
+                                                }
+                                            </p>
+                                        </li>
+                                    </ul>
                                     <ul>
                                         <li>
                                             <p className={styles.label}>Subtotal:</p>
@@ -263,15 +410,30 @@ export default function ({params}: { params: { no: string } }) {
                                         <div className={styles.operate}>
                                             <ul>
                                                 {
-                                                    order?.status == 'shipment' &&
+                                                    services && (order?.status == 'shipment' || order?.status == 'receipt' || order?.status == 'received') &&
                                                     <li>
-                                                        <Button type='primary' danger>Cancel</Button>
+                                                        <Button type='primary' danger onClick={onService}
+                                                                loading={loading.service}>After-Sales</Button>
                                                     </li>
                                                 }
                                                 {
                                                     order?.status == 'receipt' &&
                                                     <li>
-                                                        <Button type='primary'>Completed</Button>
+                                                        <Button type='primary' onClick={onReceived}
+                                                                loading={loading.received}>Received</Button>
+                                                    </li>
+                                                }
+                                                {
+                                                    order?.status == 'pay' &&
+                                                    <li>
+                                                        <Button type='primary' onClick={onPayment}
+                                                                loading={loading.payment}>Payment</Button>
+                                                    </li>
+                                                }
+                                                {
+                                                    order?.is_appraisal == 2 &&
+                                                    <li>
+                                                        <Button type='primary' onClick={onFeedback}>Feedback</Button>
                                                     </li>
                                                 }
                                             </ul>
@@ -293,23 +455,75 @@ export default function ({params}: { params: { no: string } }) {
 
                         <Card className={styles.products}>
                             <Table dataSource={order?.details} rowKey='id' size='small' pagination={false}
-                                   bordered={false} scroll={{ x: 'max-content' }}>
+                                   bordered={false} loading={load} scroll={{x: 'max-content'}}>
                                 <Table.Column title='' width={140} render={record => (
                                     <Image width={120} src={record.picture} alt={record.name}/>
                                 )}/>
-                                <Table.Column width={360} title='Product' align='center' dataIndex='name'/>
+                                <Table.Column width={360} title='Product' align='center' render={record => (
+                                    record.service ?
+                                        <Badge.Ribbon text="After-Sales" color="red">
+                                            <h3 className={styles.service}>{record.name}</h3>
+                                        </Badge.Ribbon> :
+                                        <h3>{record.name}</h3>
+                                )}/>
                                 <Table.Column width={120} title='Attributes' align='center' render={record => (
                                     record.specifications?.join('; ')
                                 )}/>
                                 <Table.Column width={120} title='Price' align='center' render={record =>
-                                    `$${(record.price / 100).toFixed(2)}`
+                                    <div>
+                                        <p>${(record.price / 100).toFixed(2)}</p>
+                                        {
+                                            record.refund && record.refund > 0 ?
+                                                <p className={styles.refunded}>
+                                                    Refunded:&nbsp;
+                                                    <span>${(record.refund / 100).toFixed(2)}</span></p> : <></>
+                                        }
+                                    </div>
                                 }/>
-                                <Table.Column width={80} title='Quantity' align='center' dataIndex='quantity'/>
+                                <Table.Column width={80} title='Quantity' align='center' render={record => (
+                                    <div>
+                                        <p>{record.quantity}</p>
+                                        {
+                                            record.returned && record.returned > 0 ?
+                                                <p className={styles.returned}>
+                                                    Returned:&nbsp;
+                                                    <span>{record.returned}</span>
+                                                </p>
+                                                : <></>
+                                        }
+                                    </div>
+                                )}/>
                             </Table>
                         </Card>
                     </div>
                 </Spin>
             </div>
+            {
+                order &&
+                <Service
+                    open={service}
+                    id={order.id}
+                    status={order.status}
+                    details={order.details}
+                    onSuccess={() => {
+                        toOrder()
+                        setService(false)
+                    }}
+                    onCancel={() => setService(false)}
+                />
+            }
+            {
+                order &&
+                <Feedback
+                    open={feedback}
+                    id={order.id}
+                    onSuccess={() => {
+                        toOrder()
+                        setFeedback(false)
+                    }}
+                    onCancel={() => setFeedback(false)}
+                />
+            }
         </ConfigProvider>
     )
 }

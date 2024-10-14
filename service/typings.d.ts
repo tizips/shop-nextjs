@@ -13,7 +13,14 @@ declare namespace API {
         data: T;
     }
 
+    type Upload = {
+        name: string;
+        uri: string;
+        url: string;
+    }
+
     type PlaceOrder = {
+        id: string;
         channel: string;
         pay_id: string;
     }
@@ -182,13 +189,11 @@ declare namespace API {
         coupon_price: number;
         refund: number;
         prices: number;
-        status: 'pay' | 'shipment' | 'receipt' | 'completed' | 'closed';
+        status: 'pay' | 'shipment' | 'receipt' | 'received' | 'completed' | 'closed';
         shipping: string;
         remark: string;
-        is_invoice: 1 | 2;
         is_invoiced: 1 | 2;
         is_appraisal: 1 | 2;
-        can_service: 1 | 2;
         create_at: string;
     }
 
@@ -203,6 +208,7 @@ declare namespace API {
         specifications?: string[];
         refund: number;
         returned: number;
+        services: number;
     }
 
     type Payment = {
@@ -229,6 +235,33 @@ declare namespace API {
     type Log = {
         action: string;
         content: string;
+        created_at: string;
+    }
+
+    type Services = {
+        id: string;
+        type: 'un_receipt' | 'refund' | 'exchange';
+        status: string;
+        reason: string;
+        details: Detail[];
+        subtotal: number;
+        shipping: number;
+        refund: number;
+        created_at: string;
+    }
+
+    type Service = {
+        id: string;
+        order: string;
+        type: 'un_receipt' | 'refund' | 'exchange';
+        status: string;
+        reason: string;
+        details: Detail[];
+        pictures: string[];
+        logs: Log[];
+        subtotal: number;
+        shipping: number;
+        refund: number;
         created_at: string;
     }
 

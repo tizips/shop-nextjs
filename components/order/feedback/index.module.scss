@@ -1,0 +1,60 @@
+.main {
+
+  table {
+    width: 100%;
+    table-layout: fixed;
+
+    tbody {
+      width: 100%;
+
+      tr {
+        width: 100%;
+
+        td {
+          padding: 10px;
+          overflow: hidden;
+
+          h3 {
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 14px;
+            font-weight: normal;
+          }
+
+          .tag {
+            margin-bottom: 5px;
+
+            .inner {
+              display: inline-block;
+              color: rgba(0, 0, 0, 0.88);
+              font-size: 12px;
+              line-height: 12px;
+              border-radius: 3px;
+              border: 1px solid #d9d9d9;
+              background-color: #fafafa;
+              padding: 1px 2px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .upload {
+
+      :global {
+
+        .ant-upload-list-item-container, .ant-upload-select {
+          width: 52px !important;
+          height: 52px !important;
+        }
+      }
+
+      .button {
+        border: none;
+        background-color: transparent;
+      }
+  }
+}

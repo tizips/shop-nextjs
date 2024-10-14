@@ -3,7 +3,7 @@
 import React from "react";
 import {signOut, useSession} from "next-auth/react";
 import {Button, ConfigProvider, Dropdown, Modal, notification} from "antd";
-import {AuditOutlined, HeartOutlined, LogoutOutlined, UserOutlined} from "@ant-design/icons";
+import {AuditOutlined, CoffeeOutlined, HeartOutlined, LogoutOutlined, UserOutlined} from "@ant-design/icons";
 
 import styles from './index.module.scss';
 import Link from "next/link";
@@ -58,6 +58,11 @@ export default function () {
                             key: 'orders',
                             icon: <AuditOutlined/>,
                             label: <Link href='/orders'>Orders</Link>
+                        },
+                        {
+                            key: 'services',
+                            icon: <CoffeeOutlined />,
+                            label: <Link href='/services'>After-Sales</Link>
                         },
                         {
                             key: 'wishlist',
