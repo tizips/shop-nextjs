@@ -431,7 +431,7 @@ export default function ({params}: { params: { no: string } }) {
                                                     </li>
                                                 }
                                                 {
-                                                    order?.is_appraisal == 2 &&
+                                                    order?.is_appraisal == 2 && order.status == 'received' &&
                                                     <li>
                                                         <Button type='primary' onClick={onFeedback}>Feedback</Button>
                                                     </li>

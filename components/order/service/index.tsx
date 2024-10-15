@@ -112,7 +112,7 @@ export default function (props: COMOrderService.Props) {
             form.resetFields();
 
             let body: COMOrderService.Form = {
-                type: props.status == 'receipt' ? 'un_receipt' : 'refund',
+                type: props.status != 'receipt' ? 'un_receipt' : 'refund',
                 details: [],
                 pictures: [],
                 reason: undefined,
@@ -149,9 +149,9 @@ export default function (props: COMOrderService.Props) {
                     <Radio.Group
                         block
                         options={[
-                            {label: 'Not Received', value: 'un_receipt', disabled: props.status != 'receipt'},
-                            {label: 'Return and Refund', value: 'refund', disabled: props.status == 'receipt'},
-                            {label: 'Exchange', value: 'exchange', disabled: props.status == 'receipt'},
+                            {label: 'Not Received', value: 'un_receipt', disabled: props.status == 'receipt'},
+                            {label: 'Return and Refund', value: 'refund', disabled: props.status != 'receipt'},
+                            {label: 'Exchange', value: 'exchange', disabled: props.status != 'receipt'},
                         ]}
                         buttonStyle='solid'
                         optionType='button'

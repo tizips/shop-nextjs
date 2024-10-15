@@ -8,6 +8,7 @@ export default async function ({searchParams}: { searchParams: URLSearchParams }
     const search = new URLSearchParams(searchParams);
 
     let err: string | undefined
+    let order: string | undefined
 
     try {
 
@@ -16,6 +17,8 @@ export default async function ({searchParams}: { searchParams: URLSearchParams }
         if (resp.code != Constants.Success) {
             throw new Error(resp.message)
         }
+
+        order = resp.data.order
 
     } catch (e: any) {
         err = e.message
@@ -35,7 +38,7 @@ export default async function ({searchParams}: { searchParams: URLSearchParams }
                                     <Button key='home' type='primary' ghost>Home</Button>
                                 </Link>,
                                 <Link href='/orders'>
-                                    <Button key='orders' type='primary'>Order List</Button>
+                                    <Button key='orders' type='primary'>Orders</Button>
                                 </Link>
                             ]
                         }
@@ -48,9 +51,15 @@ export default async function ({searchParams}: { searchParams: URLSearchParams }
                                 <Link href='/'>
                                     <Button key='home' type='primary' ghost>Home</Button>
                                 </Link>,
-                                <Link href='/orders'>
-                                    <Button key='orders' type='primary'>Order List</Button>
-                                </Link>
+                                ...[
+                                    order ?
+                                        <Link href={`/orders/${order}`}>
+                                            <Button key='orders' type='primary'>Order</Button>
+                                        </Link> :
+                                        <Link href='/orders'>
+                                            <Button key='orders' type='primary'>Orders</Button>
+                                        </Link>
+                                ]
                             ]
                         }
                     />

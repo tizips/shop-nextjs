@@ -6,7 +6,7 @@ export async function doPaypalOfDone(search: URLSearchParams) {
 
     const values = doSign(search.toString())
 
-    const response = await Axios().request<any, AxiosResponse<API.Response<any>>>({
+    const response = await Axios().request<any, AxiosResponse<API.Response<API.PayPalDone>>>({
         method: 'POST',
         url: '/shop/notify/paypal',
         params: new URLSearchParams(values),

@@ -18,6 +18,7 @@ export default function () {
     const [form] = Form.useForm<APICheckout.Form>()
 
     const [carts, setCarts] = useState<API.Cart[]>([]);
+    const [payments, setPayments] = useState<API.PayChannel[]>([]);
     const [shippings, setShippings] = useState<API.Shippings[]>([]);
     const [total, setTotal] = useState<APICheckout.Total>({total: 0, subtotal: 0});
     const [coupon, setCoupon] = useState<APICheckout.Coupon>({money: 0});
@@ -26,7 +27,7 @@ export default function () {
     const [loading, setLoading] = useState(false);
     const [load, setLoad] = useState(false);
 
-    // const payment = Form.useWatch('payment', form)
+    const pay = Form.useWatch('payment', form)
     const shipping = Form.useWatch('shipping', form)
 
     const toCarts = async () => {
@@ -152,6 +153,42 @@ export default function () {
         }
     }
 
+    const toPayments = async () => {
+
+        try {
+            const response = await fetch('/api/payment/channel', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': session?.jwt
+                },
+            });
+
+            if (response) {
+
+                const resp: API.Response<API.PayChannel[]> = await response.json();
+
+                if (resp.code != Constants.Success) {
+                    throw new Error(resp.message);
+                }
+
+                if (resp.data.length > 0) {
+                    form.setFieldValue('payment', resp.data[0].id)
+                }
+
+                setPayments(resp.data)
+            }
+        } catch (e: any) {
+            notification.error({message: e.message});
+        } finally {
+            setLoad(false)
+        }
+    }
+
+    const onPayment = (id: number) => {
+        form.setFieldValue('payment', id)
+    }
+
     const onSubmit = (values: APICheckout.Form) => {
 
         let body: APICheckout.Submit = {
@@ -177,7 +214,6 @@ export default function () {
 
     const onInit = () => {
         form.setFieldsValue({
-            payment: 'paypal',
             shipping: undefined,
             coupon: undefined,
             first_name: undefined,
@@ -198,6 +234,7 @@ export default function () {
     useEffect(() => {
 
         if (status == 'authenticated') {
+            toPayments()
             onInit()
             toCarts()
             toShippings()
@@ -368,7 +405,6 @@ export default function () {
                                             )
                                         },
                                     ]}
-
                                 />
                             </div>
 
@@ -416,9 +452,17 @@ export default function () {
 
                             <div className={styles.payment}>
                                 <ul>
-                                    <li>
-                                        <img src='/static/icon/paypal.png' alt="paypal"/>
-                                    </li>
+                                    {
+                                        payments.map(item => (
+                                            <li key={item.id} onClick={() => onPayment(item.id)}>
+                                                {
+                                                    item.channel == 'paypal' ?
+                                                        <img src='/static/icon/paypal.png' alt="paypal"/>
+                                                        : item.channel
+                                                }
+                                            </li>
+                                        ))
+                                    }
                                 </ul>
                                 <Form.Item label='Payment' name='payment' hidden>
                                     <Input/>

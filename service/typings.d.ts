@@ -265,4 +265,13 @@ declare namespace API {
         created_at: string;
     }
 
+    type PayChannel = {
+        id: number;
+        channel: string;
+    }
+
+    type PayPalDone = {
+        order: string;
+    }
+
 }

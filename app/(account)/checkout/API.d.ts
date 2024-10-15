@@ -20,7 +20,7 @@ declare namespace APICheckout {
     }
 
     type Submit = {
-        payment?: 'paypal';
+        payment?: number;
         shipping?: number;
         coupon?: string;
         first_name?: string;
@@ -38,7 +38,7 @@ declare namespace APICheckout {
     }
 
     type Form = {
-        payment?: 'paypal';
+        payment?: number;
         shipping?: number;
         coupon?: string;
         first_name?: string;
