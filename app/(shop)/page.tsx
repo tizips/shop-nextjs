@@ -24,7 +24,7 @@ export async function generateMetadata(props: any, parent: ResolvingMetadata): P
     }
 }
 
-export default async function Home() {
+export default async function Home({searchParams}: { searchParams: any }) {
 
     const banners = await doBanners()
 
@@ -36,12 +36,15 @@ export default async function Home() {
 
     return (
         <main className={styles.main}>
-            <Banner data={banners}/>
+            {
+                banners && banners.length > 0 &&
+                <Banner data={banners}/>
+            }
 
             <div className={styles.container}>
 
                 {
-                    advertises &&
+                    advertises && advertises.length > 0 &&
                     <div className={styles.new}>
                         <h2>New Product</h2>
                         <div className={styles.inner}>
@@ -101,9 +104,8 @@ export default async function Home() {
                     </div>
                 }
 
-
                 {
-                    hots &&
+                    hots && hots.length > 0 &&
                     <div className={styles.hot}>
                         <h2>Hot Product</h2>
                         <div className={styles.inner}>
@@ -131,7 +133,7 @@ export default async function Home() {
                 }
 
                 {
-                    recommended &&
+                    recommended && recommended.length > 0 &&
                     <div className={styles.recommend}>
                         <h2>Recommended Products</h2>
                         <div className={styles.inner}>
@@ -143,3 +145,5 @@ export default async function Home() {
         </main>
     );
 }
+
+export const dynamic = "force-dynamic";

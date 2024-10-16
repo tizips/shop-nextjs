@@ -52,7 +52,7 @@ export default async function ({searchParams}: { searchParams: any }) {
 
             <div className={styles.container}>
                 {
-                    blogs.data.length > 0 ?
+                    blogs.data && blogs.data.length > 0 ?
                         <>
                             {
                                 blogs.data.map(item => (
