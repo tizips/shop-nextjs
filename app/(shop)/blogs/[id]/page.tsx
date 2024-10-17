@@ -52,3 +52,5 @@ export default async function (props: { params: { id: string } }) {
         </div>
     )
 }
+
+export const dynamic = "force-dynamic";

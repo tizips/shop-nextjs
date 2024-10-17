@@ -67,3 +67,5 @@ export default async function ({searchParams}: { searchParams: URLSearchParams }
         </div>
     )
 }
+
+export const dynamic = "force-dynamic";
