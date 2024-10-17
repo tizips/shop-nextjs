@@ -37,10 +37,14 @@
 
     .information {
       color: #111;
-      font-size: 1.25em;
       font-size: 13px;
       font-weight: 400;
       line-height: 1.8;
+
+      img {
+        display: inline-block;
+        vertical-align: bottom;
+      }
     }
   }
 }
